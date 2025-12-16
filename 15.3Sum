@@ -1,0 +1,52 @@
+# 1ST SOLUTION
+# THIS WAS MY FIRST SOLN THAT HAS A TIME COMPLEXITY OF O(n^3), AND FOR LEETCODE IT SHOULD BE REDUCE TO O(n^2). BELOW THIS SOLN THERE IS ANOTHER SOLUTION.
+class Solution:
+    def threeSum(self, nums):
+        n = len(nums)
+        res = set()
+
+        for i in range(n):
+            for j in range(i + 1, n):
+                for k in range(j + 1, n):
+                    if nums[i] + nums[j] + nums[k] == 0:
+                        res.add(tuple(sorted([nums[i], nums[j], nums[k]])))
+
+        return list(res)
+
+# 2ND SOLUTION
+
+class Solution:
+    def threeSum(self, nums):
+        nums.sort()
+        n = len(nums)
+        res = []
+
+        for i in range(n - 2):
+            # skip duplicate first element
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
+
+            left = i + 1
+            right = n - 1
+
+            while left < right:
+                s = nums[i] + nums[left] + nums[right]
+
+                if s == 0:
+                    res.append([nums[i], nums[left], nums[right]])
+
+                    # skip duplicates
+                    while left < right and nums[left] == nums[left + 1]:
+                        left += 1
+                    while left < right and nums[right] == nums[right - 1]:
+                        right -= 1
+
+                    left += 1
+                    right -= 1
+
+                elif s < 0:
+                    left += 1
+                else:
+                    right -= 1
+
+        return res
