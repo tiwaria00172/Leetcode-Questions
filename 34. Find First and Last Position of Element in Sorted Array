@@ -1,0 +1,20 @@
+class Solution(object):
+    def searchRange(self, nums, target):
+        arr = []
+        flag = 0
+
+        for i in range(len(nums)):
+            if target == nums[i]:
+                arr.append(i)
+                flag = 1
+                break
+
+        for i in range(len(nums)-1, -1, -1):
+            if target == nums[i]:
+                arr.append(i)
+                break
+
+        if flag == 1:
+            return arr
+        else:
+            return [-1, -1]
