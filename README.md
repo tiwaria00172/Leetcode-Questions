@@ -1,3 +1,3 @@
 # Leetcode-Questions.
-Check All The Files.
+Checked All The Files.
 Ending this repository
