@@ -1,5 +1,4 @@
 # Leetcode-Questions.
-ok
 
 
 
