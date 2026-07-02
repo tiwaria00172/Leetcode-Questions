@@ -1,4 +1,2 @@
 # Leetcode-Questions.
 
-hello
-
