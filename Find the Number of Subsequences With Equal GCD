@@ -1,0 +1,63 @@
+class Solution {
+    private static final int MOD = 1_000_000_007;
+    private int[][][] memo;
+    private int[] arr;
+    private int n;
+
+    public int subsequencePairCount(int[] nums) {
+        this.arr = nums;
+        this.n = nums.length;
+        
+        // Max value for GCDs (Constraints state nums[i] <= 200)
+        int maxVal = 200;
+        memo = new int[n + 1][maxVal + 1][maxVal + 1];
+        
+        // Initialize memoization table with -1
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= maxVal; j++) {
+                for (int k = 0; k <= maxVal; k++) {
+                    memo[i][j][k] = -1;
+                }
+            }
+        }
+        
+        // Start from index 0 with initial GCDs as 0
+        return solve(0, 0, 0);
+    }
+
+    private int solve(int index, int gcd1, int gcd2) {
+        if (index == n) {
+            // Both subsequences must be non-empty and their GCDs equal
+            if (gcd1 > 0 && gcd2 > 0 && gcd1 == gcd2) {
+                return 1;
+            }
+            return 0;
+        }
+
+        if (memo[index][gcd1][gcd2] != -1) {
+            return memo[index][gcd1][gcd2];
+        }
+
+        // Option 1: Skip current element
+        long totalWays = solve(index + 1, gcd1, gcd2);
+
+        // Option 2: Add to first subsequence
+        int nextGcd1 = (gcd1 == 0) ? arr[index] : gcd(gcd1, arr[index]);
+        totalWays = (totalWays + solve(index + 1, nextGcd1, gcd2)) % MOD;
+
+        // Option 3: Add to second subsequence
+        int nextGcd2 = (gcd2 == 0) ? arr[index] : gcd(gcd2, arr[index]);
+        totalWays = (totalWays + solve(index + 1, gcd1, nextGcd2)) % MOD;
+
+        return memo[index][gcd1][gcd2] = (int) totalWays;
+    }
+
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+}
