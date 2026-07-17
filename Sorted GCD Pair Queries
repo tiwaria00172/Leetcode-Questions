@@ -1,0 +1,66 @@
+import java.util.Arrays;
+
+class Solution {
+    public int[] gcdValues(int[] nums, long[] queries) {
+        int maxVal = 0;
+        for (int num : nums) {
+            if (num > maxVal) {
+                maxVal = num;
+            }
+        }
+
+        // 1. Count frequencies of each number
+        int[] counts = new int[maxVal + 1];
+        for (int num : nums) {
+            counts[num]++;
+        }
+
+        // 2. Count pairs where a multiple of i is a common divisor
+        long[] gcdCounts = new long[maxVal + 1];
+        for (int i = 1; i <= maxVal; i++) {
+            long totalMultiples = 0;
+            for (int j = i; j <= maxVal; j += i) {
+                totalMultiples += counts[j];
+            }
+            gcdCounts[i] = (totalMultiples * (totalMultiples - 1)) / 2;
+        }
+
+        // 3. Reverse Sieve to find the EXACT number of pairs with GCD equal to i
+        for (int i = maxVal; i >= 1; i--) {
+            for (int j = 2 * i; j <= maxVal; j += i) {
+                gcdCounts[i] -= gcdCounts[j];
+            }
+        }
+
+        // 4. Create prefix sum array of GCD counts
+        long[] prefix = new long[maxVal + 1];
+        for (int i = 1; i <= maxVal; i++) {
+            prefix[i] = prefix[i - 1] + gcdCounts[i];
+        }
+
+        // 5. Answer queries using binary search
+        int[] answer = new int[queries.length];
+        for (int i = 0; i < queries.length; i++) {
+            answer[i] = binarySearch(prefix, queries[i]);
+        }
+
+        return answer;
+    }
+
+    private int binarySearch(long[] prefix, long query) {
+        int low = 1;
+        int high = prefix.length - 1;
+        int ans = high;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (prefix[mid] > query) {
+                ans = mid;
+                high = mid - 1; // Look for smaller GCD matching the index
+            } else {
+                low = mid + 1;
+            }
+        }
+        return ans;
+    }
+}
