@@ -1,0 +1,40 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> shiftGrid(int[][] grid, int k) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int totalElements = m * n;
+        k = k % totalElements;
+        
+        // Initialize the result structure
+        List<List<Integer>> result = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            List<Integer> row = new ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                row.add(0); // Fill with dummy values
+            }
+            result.add(row);
+        }
+        
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                // Convert 2D coordinate to 1D index
+                int flatIndex = r * n + c;
+                
+                // Calculate new 1D index after shifting
+                int newFlatIndex = (flatIndex + k) % totalElements;
+                
+                // Convert back to 2D coordinate
+                int newR = newFlatIndex / n;
+                int newC = newFlatIndex % n;
+                
+                // Assign the value to the new position
+                result.get(newR).set(newC, grid[r][c]);
+            }
+        }
+        
+        return result;
+    }
+}
