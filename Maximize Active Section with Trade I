@@ -1,0 +1,42 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public int maxActiveSectionsAfterTrade(String s) {
+        int totalOnes = 0;
+        List<Integer> blockLengths = new ArrayList<>();
+        List<Character> blockChars = new ArrayList<>();
+        
+        // Group the string into blocks of 0s and 1s
+        int i = 0;
+        while (i < s.length()) {
+            int j = i;
+            while (j < s.length() && s.charAt(j) == s.charAt(i)) {
+                j++;
+            }
+            int length = j - i;
+            blockLengths.add(length);
+            blockChars.add(s.charAt(i));
+            
+            if (s.charAt(i) == '1') {
+                totalOnes += length;
+            }
+            i = j;
+        }
+        
+        int maxOnes = totalOnes;
+        
+        // A trade is only valid if a '1' block is strictly surrounded by '0' blocks.
+        // This means it cannot be the first or the last block in our grouped lists.
+        for (int k = 1; k < blockChars.size() - 1; k++) {
+            if (blockChars.get(k) == '1' && blockChars.get(k - 1) == '0' && blockChars.get(k + 1) == '0') {
+                // If we eliminate this '1' block, the left and right '0' blocks merge.
+                // Converting this whole merged block to '1's yields this net gain:
+                int currentScore = totalOnes + blockLengths.get(k - 1) + blockLengths.get(k + 1);
+                maxOnes = Math.max(maxOnes, currentScore);
+            }
+        }
+        
+        return maxOnes;
+    }
+}
