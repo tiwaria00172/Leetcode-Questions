@@ -1,0 +1,27 @@
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+class Solution {
+    public int uniqueXorTriplets(int[] nums) {
+        // Step 1: Remove duplicates by stream or array sorting
+        int[] uniqueNums = Arrays.stream(nums).distinct().toArray();
+        int n = uniqueNums.length;
+        
+        // Step 2: Use a Set to store all unique XOR triplet outcomes
+        Set<Integer> uniqueXors = new HashSet<>();
+        
+        // Step 3: Iterate through all distinct triplet index combinations
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                for (int k = j; k < n; k++) {
+                    int xorResult = uniqueNums[i] ^ uniqueNums[j] ^ uniqueNums[k];
+                    uniqueXors.add(xorResult);
+                }
+            }
+        }
+        
+        // Step 4: Total count of unique results
+        return uniqueXors.size();
+    }
+}
