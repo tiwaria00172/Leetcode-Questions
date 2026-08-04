@@ -1,0 +1,28 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+class Solution {
+    public List<Integer> findMissingElements(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        if (nums == null || nums.length == 0) return result;
+        
+        Arrays.sort(nums);
+        int f = nums[0];
+        int l = nums[nums.length - 1];
+        
+        // Use a set or simple lookup to find missing numbers between f and l
+        boolean[] present = new boolean[l - f + 1];
+        for (int num : nums) {
+            present[num - f] = true;
+        }
+        
+        for (int i = 0; i < present.length; i++) {
+            if (!present[i]) {
+                result.add(f + i);
+            }
+        }
+        
+        return result;
+    }
+}
