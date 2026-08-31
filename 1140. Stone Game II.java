@@ -1,4 +1,4 @@
-class Solution {
+class Solution {FDGFG
     private int[] suffixSum;
     private int[][] memo;
     private int n;
