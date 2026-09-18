@@ -1,0 +1,61 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+class Solution {
+    public List<String> maxNumOfSubstrings(String s) {
+        int n = s.length();
+        int[] left = new int[26];
+        int[] right = new int[26];
+        
+        for (int i = 0; i < 26; i++) {
+            left[i] = n;
+            right[i] = -1;
+        }
+        
+        // Step 1: Record first and last occurrence of each character
+        for (int i = 0; i < n; i++) {
+            int idx = s.charAt(i) - 'a';
+            left[idx] = Math.min(left[idx], i);
+            right[idx] = i;
+        }
+        
+        List<int[]> intervals = new ArrayList<>();
+        
+        // Step 2: Validate and expand intervals for each character
+        for (int i = 0; i < 26; i++) {
+            if (left[i] == n) continue;
+            int l = left[i];
+            int r = right[i];
+            boolean valid = true;
+            
+            for (int j = l; j <= r; j++) {
+                int c = s.charAt(j) - 'a';
+                if (left[c] < l) {
+                    valid = false;
+                    break;
+                }
+                r = Math.max(r, right[c]);
+            }
+            
+            if (valid) {
+                intervals.add(new int[] {l, r});
+            }
+        }
+        
+        // Step 3: Sort intervals by end index and greedily select non-overlapping ones
+        Collections.sort(intervals, (a, b) -> a[1] - b[1]);
+        
+        List<String> result = new ArrayList<>();
+        int lastEnd = -1;
+        
+        for (int[] interval : intervals) {
+            if (interval[0] > lastEnd) {
+                result.add(s.substring(interval[0], interval[1] + 1));
+                lastEnd = interval[1];
+            }
+        }
+        
+        return result;
+    }
+}
